@@ -63,24 +63,29 @@
                     </div>
                   </v-flex>
                 </v-layout>
-                <v-data-table
-                  :headers="headers"
-                  :items="issue"
-                  class="elevation-1"
-                >
-                  <template v-slot:items="props">
-                    <td>{{ props.item.number }}</td>
-                    <td class="text-xs-left">{{ props.item.title }}</td>
-                    <td class="text-xs-left">
-                      <img class="from-avatar"
-                           :src="props.item.user.avatar_url"
-                           width="20"
-                           height="20"
-                      >
-                    </td>
-                  </template>
-                </v-data-table>
 
+                <div v-if="loading">
+                  <Carregando></Carregando>
+                </div>
+                <div v-else>
+                  <v-data-table
+                    :headers="headers"
+                    :items="issue"
+                    class="elevation-1"
+                  >
+                    <template v-slot:items="props">
+                      <td>{{ props.item.number }}</td>
+                      <td class="text-xs-left">{{ props.item.title }}</td>
+                      <td class="text-xs-left">
+                        <img class="from-avatar"
+                             :src="props.item.user.avatar_url"
+                             width="20"
+                             height="20"
+                        >
+                      </td>
+                    </template>
+                  </v-data-table>
+                </div>
               </v-container>
             </v-form>
           </v-container>
@@ -106,6 +111,7 @@ export default {
       username: '',
       issue: [],
       id: '',
+      loading: false,
       valid: true,
       usernameRules: [
         v => !!v || 'User is required',
@@ -134,11 +140,14 @@ export default {
     },
     getIssues() {
       if (this.$refs.form.validate()) {
+        this.loading = true;
         axios.get(`https://api.github.com/repos/${this.username}/${this.repository}/issues`)
           .then((response) => {
             this.issue = response.data;
             // eslint-disable-next-line
               console.log(response);
+          }).finally(() => {
+            this.loading = false;
           });
       }
     },
