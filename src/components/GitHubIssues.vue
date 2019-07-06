@@ -25,7 +25,7 @@
             >
               <v-container>
                 <v-layout>
-                  <v-flex xs12 sm6 md3>
+                  <v-flex xs12 sm6 d-flex>
                     <v-text-field
                       v-model="username"
                       :rules="usernameRules"
@@ -33,7 +33,7 @@
                       outline
                     ></v-text-field>
                   </v-flex>
-                  <v-flex xs12 sm6 md3>
+                  <v-flex xs12 sm6 d-flex>
                     <v-text-field
                       v-model="repository"
                       :rules="repositoryRules"
@@ -41,10 +41,20 @@
                       outline
                     ></v-text-field>
                   </v-flex>
+                  <v-flex >
+                    <v-select xs12 sm6 md3
+                      v-model="tipobusca"
+                      :items="items"
+                      item-text="label"
+                      item-value="tipo"
+                      label="Status"
+                      outline
+                    ></v-select>
+                  </v-flex>
                   <v-flex xs12 sm6 md3>
                     <div>
                       <v-btn
-                        @click.prevent.stop="getIssues"
+                        @click.prevent.stop="listIssues"
                         fab
                         color="primary"
                         small
@@ -63,7 +73,10 @@
                     </div>
                   </v-flex>
                 </v-layout>
+                <div v-for="issues in issue">
+                {{ issues.name }}
 
+                </div>
                 <div v-if="loading">
                   <Carregando></Carregando>
                 </div>
@@ -74,7 +87,13 @@
                     class="elevation-1"
                   >
                     <template v-slot:items="props">
-                      <td>{{ props.item.number }}</td>
+                      <td>
+                        <a
+                          @click.prevent.stop="listDataIssues(props.item.number)"
+                          href="">
+                          #{{ props.item.number }}
+                        </a>
+                      </td>
                       <td class="text-xs-left">{{ props.item.title }}</td>
                       <td class="text-xs-left">
                         <img class="from-avatar"
@@ -86,7 +105,59 @@
                     </template>
                   </v-data-table>
                 </div>
+                <v-snackbar
+                  v-model="snackbar"
+                  :multi-line="mode === 'multi-line'"
+                  right
+                  :timeout="timeout"
+                  bottom
+                  :color="statusSnackBar"
+                  :vertical="mode === 'vertical'"
+                >
+                  {{ response.mensagem }}
+                  <v-btn
+                    dark
+                    flat
+                    @click="snackbar = false"
+                  >
+                    <v-icon>clear</v-icon>
+                  </v-btn>
+                </v-snackbar>
               </v-container>
+
+              <div class="text-xs-center">
+                <v-dialog
+                  v-model="dialog"
+                  width="800"
+                >
+                  <v-card>
+                    <v-card-title
+                      class="headline grey lighten-2"
+                      primary-title
+                    >
+                      {{ selectedIssue.title }} #{{ selectedIssue.number }}
+                    </v-card-title>
+
+                    <v-card-text>
+                      {{ selectedIssue.title }}
+                    </v-card-text>
+
+                    <v-divider></v-divider>
+
+                    <v-card-actions>
+                      <v-spacer></v-spacer>
+                      <v-btn
+                        color="primary"
+                        flat
+                        @click="dialog = false"
+                      >
+                        I accept
+                      </v-btn>
+                    </v-card-actions>
+                  </v-card>
+                </v-dialog>
+              </div>
+
             </v-form>
           </v-container>
         </v-card>
@@ -107,12 +178,28 @@ export default {
   },
   data() {
     return {
+      tipobusca: '',
       repository: '',
       username: '',
       issue: [],
+      selectedIssue: {},
       id: '',
+      response: {
+        status: '',
+        mensagem: '',
+      },
+      statusSnackBar: '',
+      snackbar: false,
+      dialog: false,
+      timeout: 2500,
+      mode: '',
       loading: false,
       valid: true,
+      items: [
+        { tipo: 'all', label: 'Todos' },
+        { tipo: 'open', label: 'Abertos' },
+        { tipo: 'closed', label: 'Fechados' },
+      ],
       usernameRules: [
         v => !!v || 'User is required',
       ],
@@ -138,18 +225,39 @@ export default {
     reset() {
       this.$refs.form.reset();
     },
-    getIssues() {
+    listIssues() {
       if (this.$refs.form.validate()) {
         this.loading = true;
-        axios.get(`https://api.github.com/repos/${this.username}/${this.repository}/issues`)
+        axios.get(`https://api.github.com/repos/${this.username}/${this.repository}/issues?state=${this.tipobusca}`)
           .then((response) => {
             this.issue = response.data;
             // eslint-disable-next-line
               console.log(response);
+          }).catch(() => {
+            this.menssageSnackBar('Repositório não existe');
           }).finally(() => {
             this.loading = false;
           });
       }
+    },
+    listDataIssues(issuesId) {
+      if (this.$refs.form.validate()) {
+        this.loading = true;
+        this.dialog = true;
+        axios.get(`https://api.github.com/repos/${this.username}/${this.repository}/issues/${issuesId}`)
+          .then((response) => {
+            this.selectedIssue = response.data;
+            // eslint-disable-next-line
+            console.log(response);
+          }).finally(() => {
+            this.loading = false;
+          });
+      }
+    },
+    menssageSnackBar(text) {
+      this.statusSnackBar = 'error';
+      this.response.mensagem = text;
+      this.snackbar = true;
     },
   },
 };
