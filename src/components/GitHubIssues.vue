@@ -45,6 +45,7 @@
                     <v-select xs12 sm6 md3
                       v-model="tipobusca"
                       :items="items"
+                              :rules="statusRules"
                       item-text="label"
                       item-value="tipo"
                       label="Status"
@@ -205,6 +206,9 @@ export default {
       ],
       repositoryRules: [
         v => !!v || 'Repository is required',
+      ],
+      statusRules: [
+        v => !!v || 'Status is required',
       ],
       headers: [
         { text: 'Número',
