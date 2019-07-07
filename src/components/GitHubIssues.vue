@@ -45,7 +45,7 @@
                     <v-select xs12 sm6 md3
                       v-model="tipobusca"
                       :items="items"
-                              :rules="statusRules"
+                      :rules="statusRules"
                       item-text="label"
                       item-value="tipo"
                       label="Status"
@@ -74,17 +74,15 @@
                     </div>
                   </v-flex>
                 </v-layout>
-                <div v-for="issues in issue">
-                {{ issues.name }}
-
-                </div>
                 <div v-if="loading">
                   <Carregando></Carregando>
                 </div>
                 <div v-else>
                   <v-data-table
                     :headers="headers"
-                    :items="issue"
+                    :items="list"
+                    :pagination.sync="pagination"
+                    :no-data-text="mensagem"
                     class="elevation-1"
                   >
                     <template v-slot:items="props">
@@ -170,6 +168,7 @@
 </template>
 <script>
 import axios from 'axios';
+import _ from 'lodash';
 import Carregando from './Carregando';
 
 export default {
@@ -195,12 +194,21 @@ export default {
       timeout: 2500,
       mode: '',
       loading: false,
+      mensagem: 'Nenhum dado encontrado',
       valid: true,
+      pagination: {
+        rowsPerPage: 10,
+      },
       items: [
         { tipo: 'all', label: 'Todos' },
         { tipo: 'open', label: 'Abertos' },
         { tipo: 'closed', label: 'Fechados' },
       ],
+      config: {
+        orderBy: 'number',
+        order: 'asc',
+        filter: '',
+      },
       usernameRules: [
         v => !!v || 'User is required',
       ],
@@ -224,6 +232,12 @@ export default {
         },
       ],
     };
+  },
+  computed: {
+    list() {
+      // eslint-disable-next-line
+      return _.orderBy(this.issue, this.config.orderBy, this.config.order);
+    },
   },
   methods: {
     reset() {
