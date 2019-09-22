@@ -74,10 +74,9 @@
                     </div>
                   </v-flex>
                 </v-layout>
-                <div v-for="issues in issue">
-                {{ issues.name }}
-
-                </div>
+                <template v-for="issues in issue">
+                    {{ issues.name }}
+                </template>
                 <div v-if="loading">
                   <Carregando></Carregando>
                 </div>
