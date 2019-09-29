@@ -168,100 +168,100 @@
   </div>
 </template>
 <script>
-    import axios from 'axios';
-    import Carregando from './Carregando';
+import axios from 'axios';
+import Carregando from './Carregando';
 
-    export default {
-        name: 'GitHubIssues',
-        components: {
-            Carregando,
+export default {
+  name: 'GitHubIssues',
+  components: {
+    Carregando,
+  },
+  data() {
+    return {
+      tipobusca: '',
+      repository: '',
+      username: '',
+      issue: [],
+      selectedIssue: {},
+      id: '',
+      response: {
+        status: '',
+        mensagem: '',
+      },
+      statusSnackBar: '',
+      snackbar: false,
+      dialog: false,
+      timeout: 2500,
+      mode: '',
+      loading: false,
+      valid: true,
+      items: [
+        { tipo: 'all', label: 'Todos' },
+        { tipo: 'open', label: 'Abertos' },
+        { tipo: 'closed', label: 'Fechados' },
+      ],
+      usernameRules: [
+        v => !!v || 'User is required',
+      ],
+      repositoryRules: [
+        v => !!v || 'Repository is required',
+      ],
+      statusRules: [
+        v => !!v || 'Status is required',
+      ],
+      headers: [
+        { text: 'Número',
+          value: 'calories',
         },
-        data() {
-            return {
-                tipobusca: '',
-                repository: '',
-                username: '',
-                issue: [],
-                selectedIssue: {},
-                id: '',
-                response: {
-                    status: '',
-                    mensagem: '',
-                },
-                statusSnackBar: '',
-                snackbar: false,
-                dialog: false,
-                timeout: 2500,
-                mode: '',
-                loading: false,
-                valid: true,
-                items: [
-                    { tipo: 'all', label: 'Todos' },
-                    { tipo: 'open', label: 'Abertos' },
-                    { tipo: 'closed', label: 'Fechados' },
-                ],
-                usernameRules: [
-                    v => !!v || 'User is required',
-                ],
-                repositoryRules: [
-                    v => !!v || 'Repository is required',
-                ],
-                statusRules: [
-                    v => !!v || 'Status is required',
-                ],
-                headers: [
-                    { text: 'Número',
-                        value: 'calories',
-                    },
-                    { text: 'Titulo',
-                        value: 'fat',
-                        align: 'left',
-                    },
-                    { text: 'Usuário',
-                        value: 'fat',
-                        align: 'left',
-                    },
-                ],
-            };
+        { text: 'Titulo',
+          value: 'fat',
+          align: 'left',
         },
-        methods: {
-            reset() {
-                this.$refs.form.reset();
-            },
-            listIssues() {
-                if (this.$refs.form.validate()) {
-                    this.loading = true;
-                    axios.get(`https://api.github.com/repos/${this.username}/${this.repository}/issues?state=${this.tipobusca}`)
-                        .then((response) => {
-                            this.issue = response.data;
-                            // eslint-disable-next-line
-                            console.log(response);
-                        }).catch(() => {
-                        this.menssageSnackBar('Repositório não existe');
-                    }).finally(() => {
-                        this.loading = false;
-                    });
-                }
-            },
-            listDataIssues(issuesId) {
-                if (this.$refs.form.validate()) {
-                    this.loading = true;
-                    this.dialog = true;
-                    axios.get(`https://api.github.com/repos/${this.username}/${this.repository}/issues/${issuesId}`)
-                        .then((response) => {
-                            this.selectedIssue = response.data;
-                            // eslint-disable-next-line
-                            console.log(response);
-                        }).finally(() => {
-                        this.loading = false;
-                    });
-                }
-            },
-            menssageSnackBar(text) {
-                this.statusSnackBar = 'error';
-                this.response.mensagem = text;
-                this.snackbar = true;
-            },
+        { text: 'Usuário',
+          value: 'fat',
+          align: 'left',
         },
+      ],
     };
+  },
+  methods: {
+    reset() {
+      this.$refs.form.reset();
+    },
+    listIssues() {
+      if (this.$refs.form.validate()) {
+        this.loading = true;
+        axios.get(`https://api.github.com/repos/${this.username}/${this.repository}/issues?state=${this.tipobusca}`)
+          .then((response) => {
+            this.issue = response.data;
+            // eslint-disable-next-line
+                            console.log(response);
+          }).catch(() => {
+            this.menssageSnackBar('Repositório não existe');
+          }).finally(() => {
+            this.loading = false;
+          });
+      }
+    },
+    listDataIssues(issuesId) {
+      if (this.$refs.form.validate()) {
+        this.loading = true;
+        this.dialog = true;
+        axios.get(`https://api.github.com/repos/${this.username}/${this.repository}/issues/${issuesId}`)
+          .then((response) => {
+            this.selectedIssue = response.data;
+            // eslint-disable-next-line
+                            console.log(response);
+          }).finally(() => {
+            this.loading = false;
+          });
+      }
+    },
+    menssageSnackBar(text) {
+      this.statusSnackBar = 'error';
+      this.response.mensagem = text;
+      this.snackbar = true;
+    },
+  },
+};
 </script>
