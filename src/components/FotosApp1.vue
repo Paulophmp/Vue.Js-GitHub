@@ -172,7 +172,7 @@ import axios from 'axios';
 import Carregando from './Carregando';
 
 export default {
-  name: 'GitHubIssues',
+  name: 'FotosApp1',
   components: {
     Carregando,
   },
