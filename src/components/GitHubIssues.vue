@@ -29,7 +29,7 @@
                     <v-text-field
                       v-model="username"
                       :rules="usernameRules"
-                      label="UserName GitHub"
+                      label="Username GitHub"
                       outline
                     ></v-text-field>
                   </v-flex>
@@ -37,7 +37,7 @@
                     <v-text-field
                       v-model="repository"
                       :rules="repositoryRules"
-                      label="Repository GitHub"
+                      label="Repositório GitHub"
                       outline
                     ></v-text-field>
                   </v-flex>
@@ -45,7 +45,7 @@
                     <v-select xs12 sm6 md3
                       v-model="tipobusca"
                       :items="items"
-                              :rules="statusRules"
+                      :rules="statusRules"
                       item-text="label"
                       item-value="tipo"
                       label="Status"
@@ -74,10 +74,9 @@
                     </div>
                   </v-flex>
                 </v-layout>
-                <div v-for="issues in issue">
-                {{ issues.name }}
-
-                </div>
+                <template v-for="issues in issue">
+                    {{ issues.name }}
+                </template>
                 <div v-if="loading">
                   <Carregando></Carregando>
                 </div>
@@ -202,13 +201,13 @@ export default {
         { tipo: 'closed', label: 'Fechados' },
       ],
       usernameRules: [
-        v => !!v || 'User is required',
+        v => !!v || 'Username é obrigatório',
       ],
       repositoryRules: [
-        v => !!v || 'Repository is required',
+        v => !!v || 'Repositório é obrigatório',
       ],
       statusRules: [
-        v => !!v || 'Status is required',
+        v => !!v || 'Status é obrigatório',
       ],
       headers: [
         { text: 'Número',
