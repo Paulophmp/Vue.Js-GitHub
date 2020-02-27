@@ -1,0 +1,5 @@
+/build/
+/config/
+/dist/
+/web/.postcssrc.js
+/web/test/unit/coverage/

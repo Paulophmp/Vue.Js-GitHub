@@ -7,11 +7,11 @@
   "scripts": {
     "build": "node build/build.js",
     "test": "npm run unit && npm run e2e",
-    "e2e": "node test/e2e/runner.js",
-    "lint": "eslint --ext .js,.vue src test/unit test/e2e/specs",
+    "e2e": "node web/test/e2e/runner.js",
+    "lint": "eslint --ext .js,.vue src web/test/unit test/e2e/specs",
     "dev": "webpack-dev-server --inline --progress --config build/webpack.dev.conf.js",
     "start": "npm run dev",
-    "unit": "jest --config test/unit/jest.conf.js --coverage"
+    "unit": "jest --config web/test/unit/jest.conf.js --coverage"
   },
   "dependencies": {
     "axios": "^0.19.0",
