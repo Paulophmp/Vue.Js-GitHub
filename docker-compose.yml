@@ -4,11 +4,11 @@ services:
     image: node:10
     container_name: frontend-vue-git-hub
     user: "node"
-    working_dir: /home/node/app
+    working_dir: /app
     volumes:
-      - ./web:/home/node/app
+      - ./frontend:/app
     command:
-      sh -c 'npm i && npm run dev'
+      sh -c 'npm i && npm run serve'
     ports:
       - "8080:8080"
     environment:
