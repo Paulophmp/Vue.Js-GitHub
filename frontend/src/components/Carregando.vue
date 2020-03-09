@@ -1,14 +1,21 @@
 <template>
-  <v-layout column>
-    <v-flex xs12>
-      <div class="text-xs-center">
+  <v-layout
+          row
+          justify-center>
+    <v-container fill-height>
+      <v-layout
+              row
+              justify-center
+              align-center
+      >
         <v-progress-circular
-          :size="50"
-          indeterminate
-          color="primary"
-        />
-      </div>
-    </v-flex>
+                indeterminate
+                :size="70"
+                :width="7"
+                color="primary">
+        </v-progress-circular>
+      </v-layout>
+    </v-container>
   </v-layout>
 </template>
 
