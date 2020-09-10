@@ -1,0 +1,25 @@
+{
+  "apiVersion":	"extensions/v1beta1",
+  "kind":	"Ingress",
+  "metadata":	{
+    "name":	"ingress-webapp"
+  },
+  "spec":	{
+    "backend":	{
+      "serviceName": "default-http-backend",
+      "servicePort":	80
+    },
+    "rules":	[{
+      "host":	"my-app.example.com",
+      "http":	{
+        "paths":	[{
+          "backend":	{
+            "serviceName":	"service-webapp",
+            "servicePort":	8084
+          }
+        }]
+      }
+    }]
+  }
+}
+
