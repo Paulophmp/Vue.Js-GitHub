@@ -1,0 +1,13 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: webapp-pod
+  labels:
+    app: simples-webapp
+spec:
+  containers:
+    - name: simples-webapp
+      image: 'paulinho/vue-git-hub-api-2:v2'
+      ports:
+        - containerPort: 8080
+          name: porta-webapp

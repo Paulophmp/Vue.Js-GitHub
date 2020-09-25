@@ -1,7 +1,0 @@
-HelloWorld{
-  "env": {
-    "jest": true
-  },
-  "globals": {
-  }
-}
