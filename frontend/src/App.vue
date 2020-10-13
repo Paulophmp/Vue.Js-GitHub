@@ -19,19 +19,19 @@
     </v-app-bar>
 
     <v-content>
-      <GitHubIssues/>
+      <Tabs/>
     </v-content>
   </v-app>
 </template>
 
 <script>
-import GitHubIssues from './components/GitHubIssues';
+import Tabs from './components/Tabs';
 
 export default {
   name: 'App',
 
   components: {
-      GitHubIssues,
+    Tabs,
   },
 
   data: () => ({
